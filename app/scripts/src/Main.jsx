@@ -8,11 +8,12 @@ export default class Main extends React.Component {
       key: 'tc4bq5m2e9hh24h'
     });
     this.state = {
-      name: '',
+      userInfo: {},
       files: []
     };
     this.signIn = this.signIn.bind(this);
     this.readDir = this.readDir.bind(this);
+    this.setup = this.setup.bind(this);
   }
   signIn() {
     return new Promise((resolve, reject) => {
@@ -21,6 +22,16 @@ export default class Main extends React.Component {
           reject(error);
         }
         resolve(data);
+      });
+    });
+  }
+  getUserInfo() {
+    return new Promise((resolve, reject) => {
+      this.client.getAccountInfo((error, info) => {
+        if(error) {
+          reject(error);
+        }
+        resolve(info);
       });
     });
   }
@@ -34,16 +45,26 @@ export default class Main extends React.Component {
       });
     });
   }
-  componentDidMount() {
+  setup() {
     this.signIn()
     .then(data => {
-      this.readDir()
-      .then(entries => {
-        console.log(entries);
-      })
+      return this.getUserInfo();
+    })
+    .then(info => {
+      console.log(info);
+      this.setState({
+        userInfo: info
+      });
+      console.log(this.state.userInfo);
     })
   }
   render() {
-    return <div>client</div>;
+    return (
+      <div>
+        <button onClick={this.setup}>
+          Sign In
+        </button> 
+      </div>
+    );
   }
 }

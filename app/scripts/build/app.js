@@ -34,11 +34,12 @@ var Main = (function (_React$Component) {
       key: 'tc4bq5m2e9hh24h'
     });
     this.state = {
-      name: '',
+      userInfo: {},
       files: []
     };
     this.signIn = this.signIn.bind(this);
     this.readDir = this.readDir.bind(this);
+    this.setup = this.setup.bind(this);
   }
 
   _createClass(Main, [{
@@ -56,12 +57,26 @@ var Main = (function (_React$Component) {
       });
     }
   }, {
-    key: 'readDir',
-    value: function readDir() {
+    key: 'getUserInfo',
+    value: function getUserInfo() {
       var _this2 = this;
 
       return new Promise(function (resolve, reject) {
-        _this2.client.readdir('/', function (error, entries) {
+        _this2.client.getAccountInfo(function (error, info) {
+          if (error) {
+            reject(error);
+          }
+          resolve(info);
+        });
+      });
+    }
+  }, {
+    key: 'readDir',
+    value: function readDir() {
+      var _this3 = this;
+
+      return new Promise(function (resolve, reject) {
+        _this3.client.readdir('/', function (error, entries) {
           if (error) {
             reject(error);
           }
@@ -70,14 +85,18 @@ var Main = (function (_React$Component) {
       });
     }
   }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var _this3 = this;
+    key: 'setup',
+    value: function setup() {
+      var _this4 = this;
 
       this.signIn().then(function (data) {
-        _this3.readDir().then(function (entries) {
-          console.log(entries);
+        return _this4.getUserInfo();
+      }).then(function (info) {
+        console.log(info);
+        _this4.setState({
+          userInfo: info
         });
+        console.log(_this4.state.userInfo);
       });
     }
   }, {
@@ -86,7 +105,11 @@ var Main = (function (_React$Component) {
       return _react2['default'].createElement(
         'div',
         null,
-        'client'
+        _react2['default'].createElement(
+          'button',
+          { onClick: this.setup },
+          'Sign In'
+        )
       );
     }
   }]);
