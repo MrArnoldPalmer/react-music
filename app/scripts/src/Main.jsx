@@ -8,6 +8,7 @@ export default class Main extends React.Component {
       key: 'tc4bq5m2e9hh24h'
     });
     this.state = {
+      loggedIn: false,
       userInfo: {},
       files: []
     };
@@ -51,11 +52,10 @@ export default class Main extends React.Component {
       return this.getUserInfo();
     })
     .then(info => {
-      console.log(info);
       this.setState({
+        loggedIn: true,
         userInfo: info
       });
-      console.log(this.state.userInfo);
     })
   }
   render() {
@@ -63,7 +63,7 @@ export default class Main extends React.Component {
       <div>
         <button onClick={this.setup}>
           Sign In
-        </button> 
+        </button>
       </div>
     );
   }

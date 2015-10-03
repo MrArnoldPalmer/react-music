@@ -34,6 +34,7 @@ var Main = (function (_React$Component) {
       key: 'tc4bq5m2e9hh24h'
     });
     this.state = {
+      loggedIn: false,
       userInfo: {},
       files: []
     };
@@ -92,11 +93,10 @@ var Main = (function (_React$Component) {
       this.signIn().then(function (data) {
         return _this4.getUserInfo();
       }).then(function (info) {
-        console.log(info);
         _this4.setState({
+          loggedIn: true,
           userInfo: info
         });
-        console.log(_this4.state.userInfo);
       });
     }
   }, {
