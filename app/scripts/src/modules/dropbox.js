@@ -1,7 +1,16 @@
 import Dropbox from 'dropbox';
 
-let client = new Dropbox.Client({
-  key: //env var here
+export let client = new Dropbox.Client({
+  key: 'tc4bq5m2e9hh24h'
 });
 
-export default client;
+export function signIn() {
+  return new Promise(function(resolve, reject) {
+    client.authenticate(function(error, data) {
+      if(error) {
+        return reject(error);
+      }
+      return resolve(data);
+    });
+  });
+}

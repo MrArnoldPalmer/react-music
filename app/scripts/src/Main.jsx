@@ -1,16 +1,19 @@
 import React from 'react';
 import Dropbox from 'dropbox';
-// import client from './modules/dropbox.js';
+import {client, signIn} from './modules/dropbox.js';
 
 export default class Main extends React.Component {
   constructor() {
     super();
   }
   componentDidMount() {
-    let client = new Dropbox.Client({
-      key: 'tc4bq5m2e9hh24h'
-    });
     console.log(client);
+    signIn()
+      .then(function(data) {
+        client.getAccountInfo(function(error, info) {
+          console.log(info);
+        });
+      });
   }
   render() {
     return <div>client</div>;
