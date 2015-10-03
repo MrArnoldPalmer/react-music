@@ -32,17 +32,32 @@ var Main = (function (_React$Component) {
     _classCallCheck(this, Main);
 
     _get(Object.getPrototypeOf(Main.prototype), 'constructor', this).call(this);
+    this.state = {
+      name: ''
+    };
+    this.userLogIn = this.userLogIn.bind(this);
   }
 
   _createClass(Main, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      console.log(_modulesDropboxJs.client);
+    key: 'userLogIn',
+    value: function userLogIn() {
+      var _this = this;
+
       (0, _modulesDropboxJs.signIn)().then(function (data) {
         _modulesDropboxJs.client.getAccountInfo(function (error, info) {
-          console.log(info);
+          _this.setState({
+            name: info.name
+          });
+          console.log(_this.state.name);
         });
+      })['catch'](function (error) {
+        console.log(error);
       });
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.userLogIn();
     }
   }, {
     key: 'render',
@@ -100,9 +115,9 @@ function signIn() {
   return new Promise(function (resolve, reject) {
     client.authenticate(function (error, data) {
       if (error) {
-        return reject(error);
+        reject(error);
       }
-      return resolve(data);
+      resolve(data);
     });
   });
 }

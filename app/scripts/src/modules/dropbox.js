@@ -5,12 +5,12 @@ export let client = new Dropbox.Client({
 });
 
 export function signIn() {
-  return new Promise(function(resolve, reject) {
-    client.authenticate(function(error, data) {
+  return new Promise((resolve, reject) => {
+    client.authenticate((error, data) => {
       if(error) {
-        return reject(error);
+        reject(error);
       }
-      return resolve(data);
+      resolve(data);
     });
   });
 }
