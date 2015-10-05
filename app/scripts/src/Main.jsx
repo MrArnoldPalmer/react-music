@@ -64,6 +64,11 @@ export default class Main extends React.Component {
         <button onClick={this.setup}>
           Sign In
         </button>
+        {this.state.loggedIn ? (
+          <button onClick={this.readDir}>Read Files</button> 
+          ):(
+          <p>sign in to read files</p>
+        )}
       </div>
     );
   }

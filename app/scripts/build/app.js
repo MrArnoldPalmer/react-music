@@ -109,6 +109,15 @@ var Main = (function (_React$Component) {
           'button',
           { onClick: this.setup },
           'Sign In'
+        ),
+        this.state.loggedIn ? _react2['default'].createElement(
+          'button',
+          { onClick: this.readDir },
+          'Read Files'
+        ) : _react2['default'].createElement(
+          'p',
+          null,
+          'sign in to read files'
         )
       );
     }
