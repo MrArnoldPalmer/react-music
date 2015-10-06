@@ -10,7 +10,8 @@ export default class Main extends React.Component {
     this.state = {
       loggedIn: false,
       userInfo: {},
-      artists: []
+      artists: [],
+      albums: {},
     };
     this.signIn = this.signIn.bind(this);
     this.readDir = this.readDir.bind(this);
@@ -63,14 +64,22 @@ export default class Main extends React.Component {
     });
   }
   readAlbumDir() {
+    let albumsObj = {};
     let albums = [];
     if(this.state.artists.length > 0) {
       for(let artist of this.state.artists) {
+        albumsObj.artist = [];
         albums.push(this.readDir(artist));
       }
       Promise.all(albums)
       .then(albums => {
-        console.log(albums);
+        for(let i = 0; i < albums.length; i++) {
+          let artist = this.state.artists[i];
+          albumsObj.artist.push(albums[i]);
+        }
+        this.setState({
+          albums: albumsObj
+        });
       });
     }
     else {
@@ -78,11 +87,18 @@ export default class Main extends React.Component {
       this.readArtistDir()
       .then(() => {
         for(let artist of this.state.artists) {
+          albumsObj.artist = [];
           albums.push(this.readDir(artist));
         }
         Promise.all(albums)
         .then(albums => {
-          console.log(albums);
+          for(let i = 0; i < albums.length; i++) {
+            let artist = this.state.artists[i];
+            albumsObj.artist.push(albums[i]);
+          }
+          this.setState({
+            albums: albumsObj
+          });
         });
       })
       .catch(error => {
@@ -109,6 +125,7 @@ export default class Main extends React.Component {
           <div>
             <button onClick={this.readArtistDir}>Read Files</button>
             <button onClick={this.readAlbumDir}>Read Albums</button>
+            <p>{this.state.albums}</p>
           </div>
           ):(
           <div>

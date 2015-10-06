@@ -36,7 +36,8 @@ var Main = (function (_React$Component) {
     this.state = {
       loggedIn: false,
       userInfo: {},
-      artists: []
+      artists: [],
+      albums: {}
     };
     this.signIn = this.signIn.bind(this);
     this.readDir = this.readDir.bind(this);
@@ -108,6 +109,7 @@ var Main = (function (_React$Component) {
     value: function readAlbumDir() {
       var _this5 = this;
 
+      var albumsObj = {};
       var albums = [];
       if (this.state.artists.length > 0) {
         var _iteratorNormalCompletion = true;
@@ -118,6 +120,7 @@ var Main = (function (_React$Component) {
           for (var _iterator = this.state.artists[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var artist = _step.value;
 
+            albumsObj.artist = [];
             albums.push(this.readDir(artist));
           }
         } catch (err) {
@@ -136,7 +139,13 @@ var Main = (function (_React$Component) {
         }
 
         Promise.all(albums).then(function (albums) {
-          console.log(albums);
+          for (var i = 0; i < albums.length; i++) {
+            var artist = _this5.state.artists[i];
+            albumsObj.artist.push(albums[i]);
+          }
+          _this5.setState({
+            albums: albumsObj
+          });
         });
       } else {
         console.log('no');
@@ -149,6 +158,7 @@ var Main = (function (_React$Component) {
             for (var _iterator2 = _this5.state.artists[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
               var artist = _step2.value;
 
+              albumsObj.artist = [];
               albums.push(_this5.readDir(artist));
             }
           } catch (err) {
@@ -167,7 +177,13 @@ var Main = (function (_React$Component) {
           }
 
           Promise.all(albums).then(function (albums) {
-            console.log(albums);
+            for (var i = 0; i < albums.length; i++) {
+              var artist = _this5.state.artists[i];
+              albumsObj.artist.push(albums[i]);
+            }
+            _this5.setState({
+              albums: albumsObj
+            });
           });
         })['catch'](function (error) {
           console.log(error);
@@ -206,6 +222,11 @@ var Main = (function (_React$Component) {
             'button',
             { onClick: this.readAlbumDir },
             'Read Albums'
+          ),
+          _react2['default'].createElement(
+            'p',
+            null,
+            this.state.albums
           )
         ) : _react2['default'].createElement(
           'div',
