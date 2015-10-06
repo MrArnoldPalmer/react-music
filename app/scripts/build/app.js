@@ -36,10 +36,12 @@ var Main = (function (_React$Component) {
     this.state = {
       loggedIn: false,
       userInfo: {},
-      files: []
+      artists: []
     };
     this.signIn = this.signIn.bind(this);
     this.readDir = this.readDir.bind(this);
+    this.readArtistDir = this.readArtistDir.bind(this);
+    this.readAlbumDir = this.readAlbumDir.bind(this);
     this.setup = this.setup.bind(this);
   }
 
@@ -73,11 +75,11 @@ var Main = (function (_React$Component) {
     }
   }, {
     key: 'readDir',
-    value: function readDir() {
+    value: function readDir(directory) {
       var _this3 = this;
 
       return new Promise(function (resolve, reject) {
-        _this3.client.readdir('/', function (error, entries) {
+        _this3.client.readdir(directory, function (error, entries, dir_stat, entry_stat) {
           if (error) {
             reject(error);
           }
@@ -86,14 +88,101 @@ var Main = (function (_React$Component) {
       });
     }
   }, {
-    key: 'setup',
-    value: function setup() {
+    key: 'readArtistDir',
+    value: function readArtistDir() {
       var _this4 = this;
 
+      return new Promise(function (resolve, reject) {
+        _this4.readDir('/').then(function (entries) {
+          _this4.setState({
+            artists: entries
+          });
+          resolve();
+        })['catch'](function (error) {
+          reject(error);
+        });
+      });
+    }
+  }, {
+    key: 'readAlbumDir',
+    value: function readAlbumDir() {
+      var _this5 = this;
+
+      var albums = [];
+      if (this.state.artists.length > 0) {
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = this.state.artists[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var artist = _step.value;
+
+            albums.push(this.readDir(artist));
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+
+        Promise.all(albums).then(function (albums) {
+          console.log(albums);
+        });
+      } else {
+        console.log('no');
+        this.readArtistDir().then(function () {
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
+
+          try {
+            for (var _iterator2 = _this5.state.artists[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var artist = _step2.value;
+
+              albums.push(_this5.readDir(artist));
+            }
+          } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+                _iterator2['return']();
+              }
+            } finally {
+              if (_didIteratorError2) {
+                throw _iteratorError2;
+              }
+            }
+          }
+
+          Promise.all(albums).then(function (albums) {
+            console.log(albums);
+          });
+        })['catch'](function (error) {
+          console.log(error);
+        });
+      }
+    }
+  }, {
+    key: 'setup',
+    value: function setup() {
+      var _this6 = this;
+
       this.signIn().then(function (data) {
-        return _this4.getUserInfo();
+        return _this6.getUserInfo();
       }).then(function (info) {
-        _this4.setState({
+        _this6.setState({
           loggedIn: true,
           userInfo: info
         });
@@ -105,19 +194,32 @@ var Main = (function (_React$Component) {
       return _react2['default'].createElement(
         'div',
         null,
-        _react2['default'].createElement(
-          'button',
-          { onClick: this.setup },
-          'Sign In'
-        ),
         this.state.loggedIn ? _react2['default'].createElement(
-          'button',
-          { onClick: this.readDir },
-          'Read Files'
-        ) : _react2['default'].createElement(
-          'p',
+          'div',
           null,
-          'sign in to read files'
+          _react2['default'].createElement(
+            'button',
+            { onClick: this.readArtistDir },
+            'Read Files'
+          ),
+          _react2['default'].createElement(
+            'button',
+            { onClick: this.readAlbumDir },
+            'Read Albums'
+          )
+        ) : _react2['default'].createElement(
+          'div',
+          null,
+          _react2['default'].createElement(
+            'button',
+            { onClick: this.setup },
+            'Sign In'
+          ),
+          _react2['default'].createElement(
+            'p',
+            null,
+            'sign in to read files'
+          )
         )
       );
     }

@@ -10,10 +10,12 @@ export default class Main extends React.Component {
     this.state = {
       loggedIn: false,
       userInfo: {},
-      files: []
+      artists: []
     };
     this.signIn = this.signIn.bind(this);
     this.readDir = this.readDir.bind(this);
+    this.readArtistDir = this.readArtistDir.bind(this);
+    this.readAlbumDir = this.readAlbumDir.bind(this);
     this.setup = this.setup.bind(this);
   }
   signIn() {
@@ -36,15 +38,57 @@ export default class Main extends React.Component {
       });
     });
   }
-  readDir() {
+  readDir(directory) {
     return new Promise((resolve, reject) => {
-      this.client.readdir('/', (error, entries) => {
+      this.client.readdir(directory, (error, entries, dir_stat, entry_stat) => {
         if(error) {
           reject(error);
         }
         resolve(entries);
       });
     });
+  }
+  readArtistDir() {
+    return new Promise((resolve, reject) => {
+      this.readDir('/')
+      .then(entries => {
+        this.setState({
+          artists: entries
+        });
+        resolve();
+      })
+      .catch(error => {
+        reject(error);
+      });
+    });
+  }
+  readAlbumDir() {
+    let albums = [];
+    if(this.state.artists.length > 0) {
+      for(let artist of this.state.artists) {
+        albums.push(this.readDir(artist));
+      }
+      Promise.all(albums)
+      .then(albums => {
+        console.log(albums);
+      });
+    }
+    else {
+      console.log('no');
+      this.readArtistDir()
+      .then(() => {
+        for(let artist of this.state.artists) {
+          albums.push(this.readDir(artist));
+        }
+        Promise.all(albums)
+        .then(albums => {
+          console.log(albums);
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
   }
   setup() {
     this.signIn()
@@ -61,13 +105,18 @@ export default class Main extends React.Component {
   render() {
     return (
       <div>
-        <button onClick={this.setup}>
-          Sign In
-        </button>
         {this.state.loggedIn ? (
-          <button onClick={this.readDir}>Read Files</button> 
+          <div>
+            <button onClick={this.readArtistDir}>Read Files</button>
+            <button onClick={this.readAlbumDir}>Read Albums</button>
+          </div>
           ):(
-          <p>sign in to read files</p>
+          <div>
+            <button onClick={this.setup}>
+              Sign In
+            </button>
+            <p>sign in to read files</p>
+          </div>
         )}
       </div>
     );
