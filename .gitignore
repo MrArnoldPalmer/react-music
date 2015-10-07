@@ -32,3 +32,6 @@ output
 
 # Local environment variables
 .env
+
+# Vim Files
+*.swp
