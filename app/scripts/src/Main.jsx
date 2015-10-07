@@ -1,5 +1,6 @@
 import React from 'react';
 import Dropbox from 'dropbox';
+import Library from './Library.jsx';
 
 export default class Main extends React.Component {
   constructor() {
@@ -65,13 +66,13 @@ export default class Main extends React.Component {
   }
   readAlbumDir() {
     let albumsObj = {};
-    let albums = [];
+    let albumPromises = [];
     if(this.state.artists.length > 0) {
       for(let artist of this.state.artists) {
         albumsObj.artist = [];
-        albums.push(this.readDir(artist));
+        albumPromises.push(this.readDir(artist));
       }
-      Promise.all(albums)
+      Promise.all(albumPromises)
       .then(albums => {
         for(let i = 0; i < albums.length; i++) {
           let artist = this.state.artists[i];
@@ -80,17 +81,17 @@ export default class Main extends React.Component {
         this.setState({
           albums: albumsObj
         });
+        console.log(this.state.albums);
       });
     }
     else {
-      console.log('no');
       this.readArtistDir()
       .then(() => {
         for(let artist of this.state.artists) {
           albumsObj.artist = [];
-          albums.push(this.readDir(artist));
+          albumPromises.push(this.readDir(artist));
         }
-        Promise.all(albums)
+        Promise.all(albumPromises)
         .then(albums => {
           for(let i = 0; i < albums.length; i++) {
             let artist = this.state.artists[i];
@@ -99,6 +100,7 @@ export default class Main extends React.Component {
           this.setState({
             albums: albumsObj
           });
+          console.log(this.state.albums);
         });
       })
       .catch(error => {
@@ -125,7 +127,11 @@ export default class Main extends React.Component {
           <div>
             <button onClick={this.readArtistDir}>Read Files</button>
             <button onClick={this.readAlbumDir}>Read Albums</button>
-            <p>{this.state.albums}</p>
+            {this.state.artists.length && Object.keys(this.state.albums).length ? (
+              <Library artists={this.state.artists} albums={this.state.albums} client={this.client}/>
+            ) : (
+              null
+            )}
           </div>
           ):(
           <div>
