@@ -1,13 +1,16 @@
 import React from 'react';
+import Album from './Album.jsx';
 
 export default class View extends React.Component {
   constructor() {
     super();
     this.state = {
-      view: 'artists'
+      view: 'artists',
+      currentAlbum: null
     };
     this.selectArtistView = this.selectArtistView.bind(this);
     this.selectAlbumView = this.selectAlbumView.bind(this);
+    this.selectCurrentAlbum = this.selectCurrentAlbum.bind(this);
   }
   selectArtistView() {
     this.setState({view: 'artists'});
@@ -35,7 +38,13 @@ export default class View extends React.Component {
             {this.props.artists.map(artist => {
               return (
                 <li key={artist}>
-                  {artist}: {this.props.albums.artist}
+                  {artist}:
+                  <ul>
+                    {this.props.albums.artist}
+                    {this.props.albums.artist.map(album => {
+                      return <Album artist={artist} album={album}/>;
+                    })}
+                  </ul>
                 </li>
               );
             })}

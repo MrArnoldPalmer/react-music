@@ -1,54 +1,20 @@
 import React from 'react';
 import Dropbox from 'dropbox';
 import Library from './Library.jsx';
+import DropboxComponent from './modules/Dropbox.jsx';
 
-export default class Main extends React.Component {
+export default class Main extends DropboxComponent {
   constructor() {
     super();
-    this.client = new Dropbox.Client({
-      key: 'tc4bq5m2e9hh24h'
-    });
     this.state = {
       loggedIn: false,
       userInfo: {},
       artists: [],
       albums: {},
     };
-    this.signIn = this.signIn.bind(this);
-    this.readDir = this.readDir.bind(this);
     this.readArtistDir = this.readArtistDir.bind(this);
     this.readAlbumDir = this.readAlbumDir.bind(this);
     this.setup = this.setup.bind(this);
-  }
-  signIn() {
-    return new Promise((resolve, reject) => {
-      this.client.authenticate((error, data) => {
-        if(error) {
-          reject(error);
-        }
-        resolve(data);
-      });
-    });
-  }
-  getUserInfo() {
-    return new Promise((resolve, reject) => {
-      this.client.getAccountInfo((error, info) => {
-        if(error) {
-          reject(error);
-        }
-        resolve(info);
-      });
-    });
-  }
-  readDir(directory) {
-    return new Promise((resolve, reject) => {
-      this.client.readdir(directory, (error, entries, dir_stat, entry_stat) => {
-        if(error) {
-          reject(error);
-        }
-        resolve(entries);
-      });
-    });
   }
   readArtistDir() {
     return new Promise((resolve, reject) => {
@@ -81,7 +47,6 @@ export default class Main extends React.Component {
         this.setState({
           albums: albumsObj
         });
-        console.log(this.state.albums);
       });
     }
     else {
@@ -100,7 +65,6 @@ export default class Main extends React.Component {
           this.setState({
             albums: albumsObj
           });
-          console.log(this.state.albums);
         });
       })
       .catch(error => {
