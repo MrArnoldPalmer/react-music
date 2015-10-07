@@ -46,20 +46,8 @@ var View = (function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var library = undefined;
-      if (this.state.view === 'artists') {
-        library = _react2['default'].createElement(
-          'div',
-          null,
-          'artists'
-        );
-      } else if (this.state.view === 'albums') {
-        library = _react2['default'].createElement(
-          'div',
-          null,
-          'albums'
-        );
-      }
+      var _this = this;
+
       return _react2['default'].createElement(
         'div',
         null,
@@ -73,7 +61,29 @@ var View = (function (_React$Component) {
           { onClick: this.selectAlbumView },
           'Albums'
         ),
-        library
+        this.state.view === 'artists' ? _react2['default'].createElement(
+          'ul',
+          null,
+          this.props.artists.map(function (artist) {
+            return _react2['default'].createElement(
+              'li',
+              { key: artist },
+              artist
+            );
+          })
+        ) : _react2['default'].createElement(
+          'ul',
+          null,
+          this.props.artists.map(function (artist) {
+            return _react2['default'].createElement(
+              'li',
+              { key: artist },
+              artist,
+              ': ',
+              _this.props.albums.artist
+            );
+          })
+        )
       );
     }
   }]);

@@ -16,22 +16,31 @@ export default class View extends React.Component {
     this.setState({view: 'albums'});
   }
   render() {
-    let library;
-    if(this.state.view === 'artists') {
-      library = (
-        <div>artists</div>
-      );
-    }
-    else if(this.state.view === 'albums') {
-      library = (
-        <div>albums</div>
-      );
-    }
     return (
       <div>
         <button onClick={this.selectArtistView}>Artists</button>
         <button onClick={this.selectAlbumView}>Albums</button>
-        {library}
+        {this.state.view === 'artists' ? (
+          <ul>
+            {this.props.artists.map(artist => {
+              return (
+                <li key={artist}>
+                  {artist}
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <ul>
+            {this.props.artists.map(artist => {
+              return (
+                <li key={artist}>
+                  {artist}: {this.props.albums.artist}
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
     );
   }
