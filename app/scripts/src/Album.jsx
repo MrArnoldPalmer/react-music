@@ -1,17 +1,17 @@
 import React from 'react';
-import DropboxComponent from './modules/Dropbox.jsx';
+import * as Dropbox from './modules/Dropbox.jsx';
 
-export default class Album extends DropboxComponent {
+export default class Album extends React.Component {
   constructor() {
     super();
     this.state = {
       songs: []
     };
-    this.getTracks = this.getTracks.bind(this);
+    this.getSongs = this.getSongs.bind(this);
   }
-  getTracks() {
+  getSongs() {
     return new Promise((resolve, reject) => {
-      this.readDir(artist + album)
+      Dropbox.readDir(artist + album)
       .then(songs => {
         resolve(songs);
       })
@@ -20,18 +20,6 @@ export default class Album extends DropboxComponent {
       });
     });
   }
-  // componentDidMount() {
-  //   this.getTracks(this.props.artist + this.props.album)
-  //   .then(songs => {
-  //     this.setState({
-  //       songs: songs,
-  //       artist: this.props.artist
-  //     });
-  //   })
-  //   .catch(error => {
-  //     console.log(error);
-  //   });
-  // }
   render() {
     return (
       <div>

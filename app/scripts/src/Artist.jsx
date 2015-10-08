@@ -1,7 +1,8 @@
 import React from 'react';
-import DropboxComponent from './modules/Dropbox.jsx';
+import Album from './Album.jsx';
+import * as Dropbox from './modules/Dropbox.jsx';
 
-export default class Artist extends DropboxComponent {
+export default class Artist extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -11,7 +12,7 @@ export default class Artist extends DropboxComponent {
   }
   readAlbumDir() {
     return new Promise((resolve, reject) => {
-      this.readDir('/')
+      Dropbox.readDir(this.props.artist)
       .then(entries => {
         this.setState({
           albums: entries
@@ -21,11 +22,10 @@ export default class Artist extends DropboxComponent {
       .catch(error => {
        reject(error);
       });
-    })  
+    });
   }
   componentDidMount() {
-    //this.readAlbumDir();
-    console.log(this.client.isAuthenticated());
+    this.readAlbumDir();
   }
   render() {
     return (

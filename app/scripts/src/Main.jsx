@@ -1,9 +1,9 @@
 import React from 'react';
-import Dropbox from 'dropbox';
+// import Dropbox from 'dropbox';
 import Artist from './Artist.jsx';
-import DropboxComponent from './modules/Dropbox.jsx';
+import * as Dropbox from './modules/Dropbox.jsx';
 
-export default class Main extends DropboxComponent {
+export default class Main extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -16,7 +16,7 @@ export default class Main extends DropboxComponent {
   }
   readArtistDir() {
     return new Promise((resolve, reject) => {
-      this.readDir('/')
+      Dropbox.readDir('/')
       .then(entries => {
         this.setState({
           artists: entries
@@ -29,9 +29,9 @@ export default class Main extends DropboxComponent {
     });
   }
   setup() {
-    this.signIn()
+    Dropbox.signIn()
     .then(data => {
-      return this.getUserInfo();
+      return Dropbox.getUserInfo();
     })
     .then(info => {
       this.setState({
