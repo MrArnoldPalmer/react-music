@@ -1,6 +1,6 @@
 import React from 'react';
 import Dropbox from 'dropbox';
-import Library from './Library.jsx';
+import Artist from './Artist.jsx';
 import DropboxComponent from './modules/Dropbox.jsx';
 
 export default class Main extends DropboxComponent {
@@ -9,11 +9,9 @@ export default class Main extends DropboxComponent {
     this.state = {
       loggedIn: false,
       userInfo: {},
-      artists: [],
-      albums: {},
+      artists: []
     };
     this.readArtistDir = this.readArtistDir.bind(this);
-    this.readAlbumDir = this.readAlbumDir.bind(this);
     this.setup = this.setup.bind(this);
   }
   readArtistDir() {
@@ -29,48 +27,6 @@ export default class Main extends DropboxComponent {
         reject(error);
       });
     });
-  }
-  readAlbumDir() {
-    let albumsObj = {};
-    let albumPromises = [];
-    if(this.state.artists.length > 0) {
-      for(let artist of this.state.artists) {
-        albumsObj.artist = [];
-        albumPromises.push(this.readDir(artist));
-      }
-      Promise.all(albumPromises)
-      .then(albums => {
-        for(let i = 0; i < albums.length; i++) {
-          let artist = this.state.artists[i];
-          albumsObj.artist.push(albums[i]);
-        }
-        this.setState({
-          albums: albumsObj
-        });
-      });
-    }
-    else {
-      this.readArtistDir()
-      .then(() => {
-        for(let artist of this.state.artists) {
-          albumsObj.artist = [];
-          albumPromises.push(this.readDir(artist));
-        }
-        Promise.all(albumPromises)
-        .then(albums => {
-          for(let i = 0; i < albums.length; i++) {
-            let artist = this.state.artists[i];
-            albumsObj.artist.push(albums[i]);
-          }
-          this.setState({
-            albums: albumsObj
-          });
-        });
-      })
-      .catch(error => {
-        console.log(error);
-      });
-    }
   }
   setup() {
     this.signIn()
@@ -89,13 +45,14 @@ export default class Main extends DropboxComponent {
       <div>
         {this.state.loggedIn ? (
           <div>
-            <button onClick={this.readArtistDir}>Read Files</button>
-            <button onClick={this.readAlbumDir}>Read Albums</button>
-            {this.state.artists.length && Object.keys(this.state.albums).length ? (
-              <Library artists={this.state.artists} albums={this.state.albums} client={this.client}/>
-            ) : (
-              null
-            )}
+            <button onClick={this.readArtistDir}>
+              Read Files
+            </button>
+            {this.state.artists.map(artist => {
+              return (
+                <Artist artist={artist} key={artist} />
+              );
+            })}
           </div>
           ):(
           <div>
