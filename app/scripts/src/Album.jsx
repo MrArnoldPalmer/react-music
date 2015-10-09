@@ -11,13 +11,24 @@ export default class Album extends React.Component {
   }
   getSongs() {
     return new Promise((resolve, reject) => {
-      Dropbox.readDir(artist + album)
+      Dropbox.readDir(this.props.artist + '/' + this.props.album)
       .then(songs => {
         resolve(songs);
       })
       .catch(error => {
         reject(error);
       });
+    });
+  }
+  componentDidMount() {
+    this.getSongs()
+    .then(songs => {
+      this.setState({
+        songs: songs
+      });
+    })
+    .catch(error => {
+      console.log(error);
     });
   }
   render() {
@@ -27,7 +38,7 @@ export default class Album extends React.Component {
         <ul>
           {this.state.songs.map(song => {
             return (
-              <li>
+              <li key={song}>
                 {song}
               </li>
             );

@@ -33,7 +33,7 @@ export default class Artist extends React.Component {
         {this.props.artist}
         {this.state.albums.map(album => {
           return (
-            <Album album={album} key={album} />
+            <Album artist={this.props.artist} album={album} key={album} />
           );
         })}
       </ul>
