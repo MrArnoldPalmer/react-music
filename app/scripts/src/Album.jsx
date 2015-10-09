@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Dropbox from './modules/Dropbox.jsx';
+import Song from './Song.jsx';
 
 export default class Album extends React.Component {
   constructor() {
@@ -38,9 +39,7 @@ export default class Album extends React.Component {
         <ul>
           {this.state.songs.map(song => {
             return (
-              <li key={song}>
-                {song}
-              </li>
+              <Song key={song} song={song} artist={this.props.artist} album={this.props.album} />
             );
           })}
         </ul>

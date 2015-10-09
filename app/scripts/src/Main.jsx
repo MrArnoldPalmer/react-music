@@ -1,5 +1,4 @@
 import React from 'react';
-// import Dropbox from 'dropbox';
 import Artist from './Artist.jsx';
 import * as Dropbox from './modules/Dropbox.jsx';
 
