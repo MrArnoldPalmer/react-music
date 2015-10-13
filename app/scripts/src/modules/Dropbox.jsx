@@ -36,3 +36,14 @@ export function getUserInfo() {
     });
   });
 }
+
+export function getUrl(file) {
+  return new Promise((resolve, reject) => {
+    this.client.makeUrl(file, {downloadHack: true}, (error, data) => {
+      if(error) {
+        reject(error);
+      }
+      resolve(data);
+    });
+  });
+}

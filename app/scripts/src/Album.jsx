@@ -6,15 +6,31 @@ export default class Album extends React.Component {
   constructor() {
     super();
     this.state = {
-      songs: []
+      songs: [],
+      cover: '',
+      coverUrl: ''
     };
     this.getSongs = this.getSongs.bind(this);
   }
   getSongs() {
     return new Promise((resolve, reject) => {
       Dropbox.readDir(this.props.artist + '/' + this.props.album)
-      .then(songs => {
-        resolve(songs);
+      .then(entries => {
+        let songs = [];
+        let cover;
+        for(let file of entries) {
+          if(file.substr(file.length - 4) == '.jpg') {
+            cover = file;
+          }
+          else {
+            songs.push(file);
+          }
+          this.setState({
+            songs: songs,
+            cover: this.props.artist + '/' + this.props.album + '/' + cover
+          });
+        }
+        resolve();
       })
       .catch(error => {
         reject(error);
@@ -24,8 +40,11 @@ export default class Album extends React.Component {
   componentDidMount() {
     this.getSongs()
     .then(songs => {
+      return Dropbox.getUrl(this.state.cover);
+    })
+    .then(data => {
       this.setState({
-        songs: songs
+        coverUrl: data.url
       });
     })
     .catch(error => {
@@ -43,6 +62,9 @@ export default class Album extends React.Component {
             );
           })}
         </ul>
+        {this.state.coverUrl.length ? (
+          <img src={this.state.coverUrl}/>
+        ) : null}
       </div>
     );
   }

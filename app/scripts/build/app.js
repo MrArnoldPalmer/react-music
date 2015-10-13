@@ -37,7 +37,9 @@ var Album = (function (_React$Component) {
 
     _get(Object.getPrototypeOf(Album.prototype), 'constructor', this).call(this);
     this.state = {
-      songs: []
+      songs: [],
+      cover: '',
+      coverUrl: ''
     };
     this.getSongs = this.getSongs.bind(this);
   }
@@ -48,8 +50,43 @@ var Album = (function (_React$Component) {
       var _this = this;
 
       return new Promise(function (resolve, reject) {
-        Dropbox.readDir(_this.props.artist + '/' + _this.props.album).then(function (songs) {
-          resolve(songs);
+        Dropbox.readDir(_this.props.artist + '/' + _this.props.album).then(function (entries) {
+          var songs = [];
+          var cover = undefined;
+          var _iteratorNormalCompletion = true;
+          var _didIteratorError = false;
+          var _iteratorError = undefined;
+
+          try {
+            for (var _iterator = entries[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var file = _step.value;
+
+              if (file.substr(file.length - 4) == '.jpg') {
+                cover = file;
+              } else {
+                songs.push(file);
+              }
+              _this.setState({
+                songs: songs,
+                cover: _this.props.artist + '/' + _this.props.album + '/' + cover
+              });
+            }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator['return']) {
+                _iterator['return']();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
+              }
+            }
+          }
+
+          resolve();
         })['catch'](function (error) {
           reject(error);
         });
@@ -61,8 +98,10 @@ var Album = (function (_React$Component) {
       var _this2 = this;
 
       this.getSongs().then(function (songs) {
+        return Dropbox.getUrl(_this2.state.cover);
+      }).then(function (data) {
         _this2.setState({
-          songs: songs
+          coverUrl: data.url
         });
       })['catch'](function (error) {
         console.log(error);
@@ -83,7 +122,8 @@ var Album = (function (_React$Component) {
           this.state.songs.map(function (song) {
             return _react2['default'].createElement(_SongJsx2['default'], { key: song, song: song, artist: _this3.props.artist, album: _this3.props.album });
           })
-        )
+        ),
+        this.state.coverUrl.length ? _react2['default'].createElement('img', { src: this.state.coverUrl }) : null
       );
     }
   }]);
@@ -342,19 +382,14 @@ var Song = (function (_React$Component) {
   _createClass(Song, [{
     key: 'playSong',
     value: function playSong() {
-      var song = document.getElementById(this.props.song);
-      console.log(song);
-      song.play();
-    }
-  }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
       var _this = this;
 
-      Dropbox.client.makeUrl(this.props.artist + '/' + this.props.album + '/' + this.props.song, { download: true }, function (error, url) {
-        _this.setState({
-          url: url.url
-        });
+      Dropbox.getUrl(this.props.artist + '/' + this.props.album + '/' + this.props.song).then(function (data) {
+        var song = document.getElementById(_this.props.song);
+        song.setAttribute('src', data.url);
+        song.play();
+      })['catch'](function (error) {
+        console.log(error);
       });
     }
   }, {
@@ -363,7 +398,7 @@ var Song = (function (_React$Component) {
       return _react2['default'].createElement(
         'div',
         null,
-        _react2['default'].createElement('audio', { id: this.props.song, src: this.state.url }),
+        _react2['default'].createElement('audio', { id: this.props.song }),
         _react2['default'].createElement(
           'h3',
           { onClick: this.playSong },
@@ -407,6 +442,7 @@ Object.defineProperty(exports, '__esModule', {
 exports.readDir = readDir;
 exports.signIn = signIn;
 exports.getUserInfo = getUserInfo;
+exports.getUrl = getUrl;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -455,6 +491,19 @@ function getUserInfo() {
         reject(error);
       }
       resolve(info);
+    });
+  });
+}
+
+function getUrl(file) {
+  var _this4 = this;
+
+  return new Promise(function (resolve, reject) {
+    _this4.client.makeUrl(file, { downloadHack: true }, function (error, data) {
+      if (error) {
+        reject(error);
+      }
+      resolve(data);
     });
   });
 }
