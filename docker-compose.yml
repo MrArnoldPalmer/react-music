@@ -1,8 +1,0 @@
-reactmusic:
-  build: .
-  ports:
-   - "8000:8000"
-  volumes:
-   - .:/react-music
-  env_file:
-    - ./.env

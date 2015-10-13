@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "babel-node server.js",
+    "start": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "jshintConfig": {
@@ -18,13 +18,13 @@
     "dropbox": "^0.10.3",
     "gulp": "^3.9.0",
     "gulp-sass": "^2.0.4",
+    "gulp-webserver": "^0.9.1",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
     "supervisor": "^0.9.1",
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
-    "babel": "^5.8.23",
-    "express": "^4.13.3"
+    "babel": "^5.8.23"
   }
 }

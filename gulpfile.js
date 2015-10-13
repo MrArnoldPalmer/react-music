@@ -3,6 +3,7 @@ var browserify = require('browserify');
 var babelify = require('babelify');
 var source = require('vinyl-source-stream');
 var sass = require('gulp-sass');
+var webserver =  require('gulp-webserver');
 
 gulp.task('babel', function() {
     browserify('app/scripts/src/app.jsx')
@@ -24,4 +25,13 @@ gulp.task('watch', function() {
     gulp.watch("app/styles/scss/**/*.scss", ["sass"]);
 });
 
-gulp.task('default', ['babel', 'sass', 'watch']);
+gulp.task('server', function() {
+  gulp.src('app')
+    .pipe(webserver({
+      livereload: true,
+      fallback: 'app/index.html',
+      open: true
+    }));
+});
+
+gulp.task('default', ['babel', 'sass', 'watch', 'server']);
