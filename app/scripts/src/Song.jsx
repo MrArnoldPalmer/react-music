@@ -7,24 +7,15 @@ export default class Song extends React.Component {
     this.state = {
       url: ''
     };
-    this.playSong = this.playSong.bind(this);
+    this.select = this.select.bind(this);
   }
-  playSong() {
-    Dropbox.getUrl(this.props.artist + '/' + this.props.album + '/' + this.props.song)
-    .then(data => {
-      let song = document.getElementById(this.props.song);
-      song.setAttribute('src', data.url);
-      song.play();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  select() {
+    this.props.select(this.props.song);
   }
   render() {
     return (
       <div>
-       <audio id={this.props.song}></audio>
-       <h3 onClick={this.playSong}>{this.props.song}</h3>
+        <h3 onClick={this.select}>{this.props.song}</h3>
       </div>
     );
   }

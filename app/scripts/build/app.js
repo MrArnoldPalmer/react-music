@@ -42,6 +42,7 @@ var Album = (function (_React$Component) {
       coverUrl: ''
     };
     this.getSongs = this.getSongs.bind(this);
+    this.select = this.select.bind(this);
   }
 
   _createClass(Album, [{
@@ -108,6 +109,11 @@ var Album = (function (_React$Component) {
       });
     }
   }, {
+    key: 'select',
+    value: function select(song) {
+      this.props.select(this.props.album, song);
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this3 = this;
@@ -120,7 +126,7 @@ var Album = (function (_React$Component) {
           'ul',
           null,
           this.state.songs.map(function (song) {
-            return _react2['default'].createElement(_SongJsx2['default'], { key: song, song: song, artist: _this3.props.artist, album: _this3.props.album });
+            return _react2['default'].createElement(_SongJsx2['default'], { key: song, song: song, artist: _this3.props.artist, album: _this3.props.album, select: _this3.select });
           })
         ),
         this.state.coverUrl.length ? _react2['default'].createElement('img', { src: this.state.coverUrl }) : null
@@ -176,6 +182,8 @@ var Artist = (function (_React$Component) {
       albums: []
     };
     this.readAlbumDir = this.readAlbumDir.bind(this);
+    this.select = this.select.bind(this);
+    this.select = this.select.bind(this);
   }
 
   _createClass(Artist, [{
@@ -200,6 +208,11 @@ var Artist = (function (_React$Component) {
       this.readAlbumDir();
     }
   }, {
+    key: 'select',
+    value: function select(album, song) {
+      this.props.select(this.props.artist, album, song);
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
@@ -209,7 +222,7 @@ var Artist = (function (_React$Component) {
         null,
         this.props.artist,
         this.state.albums.map(function (album) {
-          return _react2['default'].createElement(_AlbumJsx2['default'], { artist: _this2.props.artist, album: album, key: album });
+          return _react2['default'].createElement(_AlbumJsx2['default'], { album: album, artist: _this2.props.artist, key: album, select: _this2.select });
         })
       );
     }
@@ -262,10 +275,14 @@ var Main = (function (_React$Component) {
     this.state = {
       loggedIn: false,
       userInfo: {},
-      artists: []
+      artists: [],
+      currentArtist: '',
+      currentAlbum: '',
+      currentSong: ''
     };
     this.readArtistDir = this.readArtistDir.bind(this);
     this.setup = this.setup.bind(this);
+    this.select = this.select.bind(this);
   }
 
   _createClass(Main, [{
@@ -285,6 +302,15 @@ var Main = (function (_React$Component) {
       });
     }
   }, {
+    key: 'select',
+    value: function select(artist, album, song) {
+      this.setState({
+        currentArtist: artist,
+        currentAlbum: album,
+        currentSong: song
+      });
+    }
+  }, {
     key: 'setup',
     value: function setup() {
       var _this2 = this;
@@ -301,6 +327,8 @@ var Main = (function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      var _this3 = this;
+
       return _react2['default'].createElement(
         'div',
         null,
@@ -313,7 +341,7 @@ var Main = (function (_React$Component) {
             'Read Files'
           ),
           this.state.artists.map(function (artist) {
-            return _react2['default'].createElement(_ArtistJsx2['default'], { artist: artist, key: artist });
+            return _react2['default'].createElement(_ArtistJsx2['default'], { artist: artist, key: artist, select: _this3.select });
           })
         ) : _react2['default'].createElement(
           'div',
@@ -376,21 +404,13 @@ var Song = (function (_React$Component) {
     this.state = {
       url: ''
     };
-    this.playSong = this.playSong.bind(this);
+    this.select = this.select.bind(this);
   }
 
   _createClass(Song, [{
-    key: 'playSong',
-    value: function playSong() {
-      var _this = this;
-
-      Dropbox.getUrl(this.props.artist + '/' + this.props.album + '/' + this.props.song).then(function (data) {
-        var song = document.getElementById(_this.props.song);
-        song.setAttribute('src', data.url);
-        song.play();
-      })['catch'](function (error) {
-        console.log(error);
-      });
+    key: 'select',
+    value: function select() {
+      this.props.select(this.props.song);
     }
   }, {
     key: 'render',
@@ -398,10 +418,9 @@ var Song = (function (_React$Component) {
       return _react2['default'].createElement(
         'div',
         null,
-        _react2['default'].createElement('audio', { id: this.props.song }),
         _react2['default'].createElement(
           'h3',
-          { onClick: this.playSong },
+          { onClick: this.select },
           this.props.song
         )
       );
