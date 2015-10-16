@@ -9,8 +9,6 @@ export default class Artist extends React.Component {
       albums: []
     };
     this.readAlbumDir = this.readAlbumDir.bind(this);
-    this.select = this.select.bind(this);
-    this.select = this.select.bind(this);
   }
   readAlbumDir() {
     return new Promise((resolve, reject) => {
@@ -29,16 +27,13 @@ export default class Artist extends React.Component {
   componentDidMount() {
     this.readAlbumDir();
   }
-  select(album, song) {
-    this.props.select(this.props.artist, album, song);
-  }
   render() {
     return (
       <ul>
         {this.props.artist}
         {this.state.albums.map(album => {
             return (
-              <Album album={album} artist={this.props.artist} key={album} select={this.select}/>
+              <Album album={album} artist={this.props.artist} key={album} select={this.props.select}/>
             );
           })}
       </ul>

@@ -42,7 +42,6 @@ var Album = (function (_React$Component) {
       coverUrl: ''
     };
     this.getSongs = this.getSongs.bind(this);
-    this.select = this.select.bind(this);
   }
 
   _createClass(Album, [{
@@ -109,11 +108,6 @@ var Album = (function (_React$Component) {
       });
     }
   }, {
-    key: 'select',
-    value: function select(song) {
-      this.props.select(this.props.album, song);
-    }
-  }, {
     key: 'render',
     value: function render() {
       var _this3 = this;
@@ -126,7 +120,7 @@ var Album = (function (_React$Component) {
           'ul',
           null,
           this.state.songs.map(function (song) {
-            return _react2['default'].createElement(_SongJsx2['default'], { key: song, song: song, artist: _this3.props.artist, album: _this3.props.album, select: _this3.select });
+            return _react2['default'].createElement(_SongJsx2['default'], { key: song, song: song, artist: _this3.props.artist, album: _this3.props.album, select: _this3.props.select });
           })
         ),
         this.state.coverUrl.length ? _react2['default'].createElement('img', { src: this.state.coverUrl }) : null
@@ -182,8 +176,6 @@ var Artist = (function (_React$Component) {
       albums: []
     };
     this.readAlbumDir = this.readAlbumDir.bind(this);
-    this.select = this.select.bind(this);
-    this.select = this.select.bind(this);
   }
 
   _createClass(Artist, [{
@@ -208,11 +200,6 @@ var Artist = (function (_React$Component) {
       this.readAlbumDir();
     }
   }, {
-    key: 'select',
-    value: function select(album, song) {
-      this.props.select(this.props.artist, album, song);
-    }
-  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
@@ -222,7 +209,7 @@ var Artist = (function (_React$Component) {
         null,
         this.props.artist,
         this.state.albums.map(function (album) {
-          return _react2['default'].createElement(_AlbumJsx2['default'], { album: album, artist: _this2.props.artist, key: album, select: _this2.select });
+          return _react2['default'].createElement(_AlbumJsx2['default'], { album: album, artist: _this2.props.artist, key: album, select: _this2.props.select });
         })
       );
     }
@@ -410,7 +397,7 @@ var Song = (function (_React$Component) {
   _createClass(Song, [{
     key: 'select',
     value: function select() {
-      this.props.select(this.props.song);
+      this.props.select(this.props.artist, this.props.album, this.props.song);
     }
   }, {
     key: 'render',

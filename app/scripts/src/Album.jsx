@@ -11,7 +11,6 @@ export default class Album extends React.Component {
       coverUrl: ''
     };
     this.getSongs = this.getSongs.bind(this);
-    this.select = this.select.bind(this);
   }
   getSongs() {
     return new Promise((resolve, reject) => {
@@ -52,9 +51,6 @@ export default class Album extends React.Component {
         console.log(error);
       });
   }
-  select(song) {
-    this.props.select(this.props.album, song);
-  }
   render() {
     return (
       <div>
@@ -62,7 +58,7 @@ export default class Album extends React.Component {
         <ul>
           {this.state.songs.map(song => {
             return (
-              <Song key={song} song={song} artist={this.props.artist} album={this.props.album} select={this.select}/>
+              <Song key={song} song={song} artist={this.props.artist} album={this.props.album} select={this.props.select}/>
             );
           })}
         </ul>

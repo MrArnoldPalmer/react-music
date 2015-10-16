@@ -10,7 +10,7 @@ export default class Song extends React.Component {
     this.select = this.select.bind(this);
   }
   select() {
-    this.props.select(this.props.song);
+    this.props.select(this.props.artist, this.props.album, this.props.song);
   }
   render() {
     return (
