@@ -56,7 +56,7 @@ export default class Main extends React.Component {
       <div>
         {this.state.loggedIn ? (
           <div>
-            <button onClick={this.readArtistDir}>
+            <button className='button__confirm' onClick={this.readArtistDir}>
               Read Files
             </button>
             {this.state.artists.map(artist => {
@@ -67,7 +67,7 @@ export default class Main extends React.Component {
           </div>
         ) : (
           <div>
-            <button onClick={this.setup}>
+            <button className='button__confirm' onClick={this.setup}>
               Sign In
             </button>
             <p>sign in to read files</p>

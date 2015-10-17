@@ -328,7 +328,7 @@ var Main = (function (_React$Component) {
           null,
           _react2['default'].createElement(
             'button',
-            { onClick: this.readArtistDir },
+            { className: 'button__confirm', onClick: this.readArtistDir },
             'Read Files'
           ),
           this.state.artists.map(function (artist) {
@@ -339,7 +339,7 @@ var Main = (function (_React$Component) {
           null,
           _react2['default'].createElement(
             'button',
-            { onClick: this.setup },
+            { className: 'button__confirm', onClick: this.setup },
             'Sign In'
           ),
           _react2['default'].createElement(
@@ -433,12 +433,12 @@ var Player = (function (_React$Component) {
         _react2['default'].createElement('audio', { id: 'audio', className: 'audio', src: this.state.currentSongUrl }),
         _react2['default'].createElement(
           'button',
-          { onClick: this.playSong },
+          { className: 'button__confirm', onClick: this.playSong },
           'play'
         ),
         _react2['default'].createElement(
           'button',
-          { onClick: this.pauseSong },
+          { className: 'button__confirm', onClick: this.pauseSong },
           'pause'
         )
       );

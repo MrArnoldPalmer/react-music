@@ -32,8 +32,8 @@ export default class Player extends React.Component {
     return (
       <div>
         <audio id='audio' className='audio' src={this.state.currentSongUrl} />
-        <button onClick={this.playSong}>play</button>
-        <button onClick={this.pauseSong}>pause</button>
+        <button className='button__confirm' onClick={this.playSong}>play</button>
+        <button className='button__confirm' onClick={this.pauseSong}>pause</button>
       </div>
     );
   }
