@@ -1,5 +1,6 @@
 import React from 'react';
 import Artist from './Artist.jsx';
+import Player from './Player.jsx';
 import * as Dropbox from './modules/Dropbox.jsx';
 
 export default class Main extends React.Component {
@@ -54,27 +55,25 @@ export default class Main extends React.Component {
     return (
       <div>
         {this.state.loggedIn ? (
-            <div>
-              <button onClick={this.readArtistDir}>
-                Read Files
-              </button>
-              {this
-                .state
-                .artists
-                .map(artist => {
-                  return (
-                    <Artist artist={artist} key={artist} select={this.select}/>
-                  );
-                })}
-            </div>
-          ) : (
-            <div>
-              <button onClick={this.setup}>
-                Sign In
-              </button>
-              <p>sign in to read files</p>
-            </div>
-          )}
+          <div>
+            <button onClick={this.readArtistDir}>
+              Read Files
+            </button>
+            {this.state.artists.map(artist => {
+              return (
+                <Artist artist={artist} key={artist} select={this.select}/>
+              );
+            })}
+          </div>
+        ) : (
+          <div>
+            <button onClick={this.setup}>
+              Sign In
+            </button>
+            <p>sign in to read files</p>
+          </div>
+        )}
+        <Player className='player' song={this.state.currentSong} album={this.state.currentAlbum} artist={this.state.currentArtist} />
       </div>
     );
   }
