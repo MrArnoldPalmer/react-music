@@ -25,9 +25,10 @@ export default class Album extends React.Component {
             else {
               songs.push(file);
             }
+            let cover = `${this.props.artist}/${this.props.album}/${cover}`;
             this.setState({
-              songs: songs,
-              cover: this.props.artist + '/' + this.props.album + '/' + cover
+              songs,
+              cover
             });
           }
           resolve();

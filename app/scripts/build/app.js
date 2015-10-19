@@ -62,13 +62,14 @@ var Album = (function (_React$Component) {
               var file = _step.value;
 
               if (file.substr(file.length - 4) == '.jpg') {
-                cover = file;
+                _cover = file;
               } else {
                 songs.push(file);
               }
+              var _cover = _this.props.artist + '/' + _this.props.album + '/' + _cover;
               _this.setState({
                 songs: songs,
-                cover: _this.props.artist + '/' + _this.props.album + '/' + cover
+                cover: _cover
               });
             }
           } catch (err) {
